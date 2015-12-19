@@ -1,0 +1,17 @@
+---
+title: "CodeBook"
+author: "Aaron Cole"
+date: "19 December 2015"
+output: html_document
+---
+
+## Libraries
+The following libraries have been used.
+```{r eval=FALSE}
+library(dplyr)
+library(tidyr)
+```
+
+## The dataset
+* The dataset folder is named "UCI HAR Dataset" and is located in the root of the repository.
+* http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
