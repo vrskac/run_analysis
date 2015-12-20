@@ -2,11 +2,12 @@
 # re_prepare flags rebuild of "prepared_data.csv" file.
 # re_tidy flags rebuild of "tidy_data.csv" file.
 # Both flags false by default, script will attempt to use existing local files.
-run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, re_tidy = FALSE) {
+run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, 
+                         re_tidy = FALSE) {
     
     # Load libraries.
-    library(dplyr)
-    library(tidyr)
+    library(dplyr, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+    library(tidyr, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
     
     # Source scripts.
     source("prepare_data.R")
@@ -49,7 +50,8 @@ run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, re_tidy =
         }
         
         # Write a CSV with the prepared data, ready for further processing.
-        write.csv(prepared_data, file.path(filename_prepared_data), row.names = FALSE)
+        write.csv(prepared_data, file.path(filename_prepared_data), 
+                  row.names = FALSE)
         
         message("Info: File prepared_data.csv has been rebuilt.")
     }
@@ -72,9 +74,15 @@ run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, re_tidy =
     }
     
     if(return_tidy_data) {
-        cols = c(subject = "integer", activity = "character", 
-                 signal = "character", calculation = "character", 
-                 axis = "character", value = "double")
+        cols = c(subject = "integer", 
+                 activity = "character",
+                 domain = "character",
+                 signal_type = "character",
+                 signal_source = "character",
+                 signal_form = "character", 
+                 calculation = "character", 
+                 axis = "character", 
+                 value = "double")
         return(tbl_df(read.csv(filename_tidy_data,
                                colClasses = cols)))
     }
