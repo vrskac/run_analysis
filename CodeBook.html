@@ -74,6 +74,32 @@ img {
 <pre class="r"><code>library(dplyr)
 library(tidyr)</code></pre>
 </div>
+<div id="dataset-information" class="section level2">
+<h2>Dataset information</h2>
+<ul>
+<li>Dataset full name is “Human Activity Recognition Using Smartphones Dataset”.</li>
+<li>The dataset folder is named “UCI HAR Dataset” and is located in the root of the repository.</li>
+<li>Information about the dataset can be found at <a href="http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones"><a href="http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones" class="uri">http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones</a></a>.</li>
+<li>The dataset can be downloaded at <a href="https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"><a href="https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip">https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip</a></a></li>
+</ul>
+</div>
+<div id="assumptions" class="section level2">
+<h2>Assumptions</h2>
+<ul>
+<li>Variable count and ordering is the same between the “X_test.txt” and “X_train.txt” files.</li>
+<li>Each line in the data files is one observation.</li>
+<li>There should be the same number of observations in each of the 3 data files for the “test” and “train” datasets.</li>
+</ul>
+</div>
+<div id="checks" class="section level2">
+<h2>Checks</h2>
+<ul>
+<li>Once the “test” and “train” datasets have been joined, there should be exactly 10,299 observations.</li>
+<li>The “test” dataset should have 9 unique subjects.</li>
+<li>The “train” dataset should have 21 unique subjects.</li>
+<li>The joined dataset of 10,299 observations should have 30 unique subjects.</li>
+</ul>
+</div>
 
 
 </div>

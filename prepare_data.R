@@ -58,7 +58,7 @@ prepare_data <- function(dataset) {
     }
     
     # Set column names for the subject and activity values datasets.
-    colnames(subject_values) <- "subjects"
+    colnames(subject_values) <- "subject"
     colnames(activity_values) <- "activity_id"
     
     # Check that the unique activity values are within the range 1 to 6.

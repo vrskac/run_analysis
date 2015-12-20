@@ -12,6 +12,19 @@ library(dplyr)
 library(tidyr)
 ```
 
-## The dataset
+## Dataset information
+* Dataset full name is "Human Activity Recognition Using Smartphones Dataset".
 * The dataset folder is named "UCI HAR Dataset" and is located in the root of the repository.
-* http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+* Information about the dataset can be found at [http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones).
+* The dataset can be downloaded at [https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip)
+
+## Assumptions
+* Variable count and ordering is the same between the "X_test.txt" and "X_train.txt" files.
+* Each line in the data files is one observation.
+* There should be the same number of observations in each of the 3 data files for the "test" and "train" datasets.
+
+## Checks
+* Once the "test" and "train" datasets have been joined, there should be exactly 10,299 observations.
+* The "test" dataset should have 9 unique subjects.
+* The "train" dataset should have 21 unique subjects.
+* The joined dataset of 10,299 observations should have 30 unique subjects.
