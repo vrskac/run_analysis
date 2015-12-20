@@ -34,7 +34,7 @@ output:
 1. When calling the run_analysis function three parameters can be supplied, all of which are logical and default to FALSE.
     + return\_tidy\_data is a flag to indicate if a dplyr tbl_df of the tidy data should be returned to the function caller.
     + re\_prepare is a flag to indicate if the raw data needs to be re-prepared and the prepare_data.csv file rebuilt.
-    + re\_tidy is a flag to indicate if the prepared data need to be re-tidied and the tidy_data.csv file rebuilt.
+    + re\_tidy is a flag to indicate if the prepared data needs to be re-tidied and the tidy_data.csv file rebuilt.
 ```{r eval=FALSE}
 run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, re_tidy = FALSE)
 ```
@@ -421,7 +421,7 @@ dataset$axis[dataset$axis == ""] <- NA
 #### Output variable descriptions
 The output data is grouped with the following heirarchy.
 
-* subject > activity > domain > signal\_type > signa\l_source > signal_form > calculation > axis
+* subject > activity > domain > signal\_type > signal\_source > signal\_form > calculation > axis
 
 Variable | Class | Description
 ---------|-------|------------
@@ -433,4 +433,4 @@ signal\_source | chr | The source of the signal, either "accelerometer", "bodyac
 signal\_form | chr | The signal form, either "jerk", "mag", "jerkmag" or NA.
 calculation | chr | The calculation performed, either "mean" for the mean or "std" for the standard deviation.
 axis | chr | The signal axis, if any, either "x", "y", "z" or NA.
-mean_value | dbl | The mean value of the measurement.
+mean\_value | dbl | The mean value of the measurement.
