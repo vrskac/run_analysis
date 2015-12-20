@@ -22,9 +22,9 @@ This project prepares and tidies the "Activity Recognition Using Smartphones Dat
 ## Libraries
 The following libraries have been used. They are loaded at the top off the **run_analysis.R** file.
 ```{r eval=FALSE}
-    # Source scripts.
-    source("prepare_data.R")
-    source("tidy_data.R")
+    # Load libraries.
+    library(dplyr, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
+    library(tidyr, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 ```
 
 ## Script summary
