@@ -1,6 +1,8 @@
-# If "regenerate" is TRUE then regenerate the "dataset.csv" file, otherwise it
-# will be loaded locally if available.
-run_analysis <- function(regenerate = FALSE) {
+# return_tidy_data flag is used to return a tbl_df of the tidy data.
+# re_prepare flags rebuild of "prepared_data.csv" file.
+# re_tidy flags rebuild of "tidy_data.csv" file.
+# Both flags false by default, script will attempt to use existing local files.
+run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, re_tidy = FALSE) {
     
     # Load libraries.
     library(dplyr)
@@ -10,34 +12,71 @@ run_analysis <- function(regenerate = FALSE) {
     source("prepare_data.R")
     source("tidy_data.R")
     
-    # Check if the dataset file exists already.
-    dataset_filename <- "dataset.csv"
-    if(!file.exists(dataset_filename)) {
-        regenerate = TRUE
+    # Setup the filenames.
+    filename_prepared_data <- "prepared_data.csv"
+    filename_tidy_data <- "tidy_data.csv"  
+    
+    # Check if the prepared data file exists.
+    if(file.exists(filename_prepared_data) == FALSE | re_prepare == TRUE) {
+        re_prepare = TRUE
+        message("Info: File prepared_data.csv will be rebuilt.")
     }
     
-    if(regenerate) {
+    # Check if the tidy data file exists.
+    if(file.exists(filename_tidy_data) == FALSE | re_tidy == TRUE) {
+        re_tidy = TRUE
+        message("Info: File tidy_data.csv will be rebuilt.")
+    }
+    
+    # If we are re-preparing, then we should also re-tidy with the newly 
+    # prepared data
+    if(re_prepare == TRUE & re_tidy == FALSE) {
+        re_tidy = TRUE
+        message("Info: File tidy_data.csv will therefore also be rebuilt.")
+    }
+    
+    if(re_prepare) {
         # Prepare and load the data.
         test_data <- prepare_data("test")
         train_data <- prepare_data("train")
         
         # Join the datasets.
-        dataset <- bind_rows(test_data, train_data)
+        prepared_data <- bind_rows(test_data, train_data)
         
         # Check there are 10,299 observations.
-        if(nrow(dataset) != 10299) {
+        if(nrow(prepared_data) != 10299) {
             stop("Observations count is not 10,299.")
         }
         
-        # Write a CSV with the dataset for further processing.
-        write.csv(dataset, file.path(dataset_filename), row.names = FALSE)
+        # Write a CSV with the prepared data, ready for further processing.
+        write.csv(prepared_data, file.path(filename_prepared_data), row.names = FALSE)
+        
+        message("Info: File prepared_data.csv has been rebuilt.")
     }
     
-    # Load the dataset.
-    dataset <- tbl_df(read.csv(dataset_filename))
+    if(re_tidy) {
+        # Read and tidy the prepared data.
+        tidy_df <- tidy_data(tbl_df(read.csv(filename_prepared_data)))
+        
+        # Write a CSV with the tidy data.
+        write.csv(tidy_df, file.path(filename_tidy_data), row.names = FALSE)
+        
+        message("Info: File tidy_data.csv has been rebuilt.")
+    }
     
-    # Tidy the dataset.
-    tidy_dataset <- tidy_data(dataset)
+    if(re_prepare == FALSE & re_tidy == FALSE) {
+        message("Warning: No processing was performed.")
+        message("Info: prepared_data.csv and tidy_data.csv already exist.")
+        message("Info: Set parameter re_prepare = TRUE to re-prepare data.")
+        message("Info: Set parameter re_tidy = TRUE to re-tidy data.")
+    }
     
-    return(tidy_dataset)
+    if(return_tidy_data) {
+        cols = c(subject = "integer", activity = "character", 
+                 signal = "character", calculation = "character", 
+                 axis = "character", value = "double")
+        return(tbl_df(read.csv(filename_tidy_data,
+                               colClasses = cols)))
+    }
+
 }
