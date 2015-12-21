@@ -1,4 +1,4 @@
-CookBook
+CodeBook
 ========
 
 Dataset information

@@ -7,7 +7,7 @@ output:
         variant: markdown_github
 ---
 
-# CookBook
+# CodeBook
 
 ## Dataset information
 * Dataset full name is "Human Activity Recognition Using Smartphones Dataset".
