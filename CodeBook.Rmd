@@ -416,10 +416,11 @@ run_analysis(TRUE, TRUE, TRUE)
 * The output data is grouped by subject then activity.
 * The value provided for the numeric measurements columns 3:68 is the mean value for the measurement, grouped by activity and then subject.
 
-### Example output
+### Example outputs
 ```{r eval=TRUE, warning=FALSE}
 source("run_analysis.R")
-str(run_analysis(TRUE, TRUE, TRUE))
+str(run_analysis(TRUE, FALSE, FALSE))
+run_analysis(TRUE, FALSE, FALSE)
 ```
 
 ### Variable information

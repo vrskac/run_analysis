@@ -489,17 +489,17 @@ Output
 -   The output data is grouped by subject then activity.
 -   The value provided for the numeric measurements columns 3:68 is the mean value for the measurement, grouped by activity and then subject.
 
-### Example output
+### Example outputs
 
 ``` r
 source("run_analysis.R")
-str(run_analysis(TRUE, TRUE, TRUE))
+str(run_analysis(TRUE, FALSE, FALSE))
 ```
 
-    ## Info: File prepared_data.csv will be rebuilt.
-    ## Info: File tidy_data.csv will be rebuilt.
-    ## Info: File prepared_data.csv has been rebuilt.
-    ## Info: File tidy_data.csv has been rebuilt.
+    ## Warning: No processing was performed.
+    ## Info: prepared_data.csv and tidy_data.csv already exist.
+    ## Info: Set parameter re_prepare = TRUE to re-prepare data.
+    ## Info: Set parameter re_tidy = TRUE to re-tidy data.
 
     ## Classes 'tbl_df', 'tbl' and 'data.frame':    180 obs. of  68 variables:
     ##  $ subject                      : int  1 1 1 1 1 1 2 2 2 2 ...
@@ -570,6 +570,63 @@ str(run_analysis(TRUE, TRUE, TRUE))
     ##  $ freq_BodyBodyGyroMag_std     : num  -0.824 -0.932 -0.978 -0.321 -0.398 ...
     ##  $ freq_BodyBodyGyroJerkMag_mean: num  -0.942 -0.99 -0.995 -0.319 -0.282 ...
     ##  $ freq_BodyBodyGyroJerkMag_std : num  -0.933 -0.987 -0.995 -0.382 -0.392 ...
+
+``` r
+run_analysis(TRUE, FALSE, FALSE)
+```
+
+    ## Warning: No processing was performed.
+    ## Info: prepared_data.csv and tidy_data.csv already exist.
+    ## Info: Set parameter re_prepare = TRUE to re-prepare data.
+    ## Info: Set parameter re_tidy = TRUE to re-tidy data.
+
+    ## Source: local data frame [180 x 68]
+    ## 
+    ##    subject           activity time_BodyAcc_mean_x time_BodyAcc_mean_y
+    ##      (int)             (fctr)               (dbl)               (dbl)
+    ## 1        1             laying           0.2215982        -0.040513953
+    ## 2        1            sitting           0.2612376        -0.001308288
+    ## 3        1           standing           0.2789176        -0.016137590
+    ## 4        1            walking           0.2773308        -0.017383819
+    ## 5        1 walking_downstairs           0.2891883        -0.009918505
+    ## 6        1   walking_upstairs           0.2554617        -0.023953149
+    ## 7        2             laying           0.2813734        -0.018158740
+    ## 8        2            sitting           0.2770874        -0.015687994
+    ## 9        2           standing           0.2779115        -0.018420827
+    ## 10       2            walking           0.2764266        -0.018594920
+    ## ..     ...                ...                 ...                 ...
+    ## Variables not shown: time_BodyAcc_mean_z (dbl), time_BodyAcc_std_x (dbl),
+    ##   time_BodyAcc_std_y (dbl), time_BodyAcc_std_z (dbl),
+    ##   time_GravityAcc_mean_x (dbl), time_GravityAcc_mean_y (dbl),
+    ##   time_GravityAcc_mean_z (dbl), time_GravityAcc_std_x (dbl),
+    ##   time_GravityAcc_std_y (dbl), time_GravityAcc_std_z (dbl),
+    ##   time_BodyAccJerk_mean_x (dbl), time_BodyAccJerk_mean_y (dbl),
+    ##   time_BodyAccJerk_mean_z (dbl), time_BodyAccJerk_std_x (dbl),
+    ##   time_BodyAccJerk_std_y (dbl), time_BodyAccJerk_std_z (dbl),
+    ##   time_BodyGyro_mean_x (dbl), time_BodyGyro_mean_y (dbl),
+    ##   time_BodyGyro_mean_z (dbl), time_BodyGyro_std_x (dbl),
+    ##   time_BodyGyro_std_y (dbl), time_BodyGyro_std_z (dbl),
+    ##   time_BodyGyroJerk_mean_x (dbl), time_BodyGyroJerk_mean_y (dbl),
+    ##   time_BodyGyroJerk_mean_z (dbl), time_BodyGyroJerk_std_x (dbl),
+    ##   time_BodyGyroJerk_std_y (dbl), time_BodyGyroJerk_std_z (dbl),
+    ##   time_BodyAccMag_mean (dbl), time_BodyAccMag_std (dbl),
+    ##   time_GravityAccMag_mean (dbl), time_GravityAccMag_std (dbl),
+    ##   time_BodyAccJerkMag_mean (dbl), time_BodyAccJerkMag_std (dbl),
+    ##   time_BodyGyroMag_mean (dbl), time_BodyGyroMag_std (dbl),
+    ##   time_BodyGyroJerkMag_mean (dbl), time_BodyGyroJerkMag_std (dbl),
+    ##   freq_BodyAcc_mean_x (dbl), freq_BodyAcc_mean_y (dbl),
+    ##   freq_BodyAcc_mean_z (dbl), freq_BodyAcc_std_x (dbl), freq_BodyAcc_std_y
+    ##   (dbl), freq_BodyAcc_std_z (dbl), freq_BodyAccJerk_mean_x (dbl),
+    ##   freq_BodyAccJerk_mean_y (dbl), freq_BodyAccJerk_mean_z (dbl),
+    ##   freq_BodyAccJerk_std_x (dbl), freq_BodyAccJerk_std_y (dbl),
+    ##   freq_BodyAccJerk_std_z (dbl), freq_BodyGyro_mean_x (dbl),
+    ##   freq_BodyGyro_mean_y (dbl), freq_BodyGyro_mean_z (dbl),
+    ##   freq_BodyGyro_std_x (dbl), freq_BodyGyro_std_y (dbl),
+    ##   freq_BodyGyro_std_z (dbl), freq_BodyAccMag_mean (dbl),
+    ##   freq_BodyAccMag_std (dbl), freq_BodyBodyAccJerkMag_mean (dbl),
+    ##   freq_BodyBodyAccJerkMag_std (dbl), freq_BodyBodyGyroMag_mean (dbl),
+    ##   freq_BodyBodyGyroMag_std (dbl), freq_BodyBodyGyroJerkMag_mean (dbl),
+    ##   freq_BodyBodyGyroJerkMag_std (dbl)
 
 ### Variable information
 
