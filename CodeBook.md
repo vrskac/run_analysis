@@ -154,21 +154,11 @@ if(re_prepare == FALSE & re_tidy == FALSE) {
 }
 ```
 
--   If return\_tidy\_data is TRUE, then read the tidy data from CSV and return it to the function caller.
+-   If return\_tidy\_data is TRUE, then read the tidy data from CSV and return it to the function caller as a dplyr tbl\_df.
 
 ``` r
 if(return_tidy_data) {
-    cols = c(subject = "integer", 
-             activity = "character",
-             domain = "character",
-             signal_type = "character",
-             signal_source = "character",
-             signal_form = "character", 
-             calculation = "character", 
-             axis = "character", 
-             value = "double")
-    return(tbl_df(read.csv(filename_tidy_data,
-                           colClasses = cols)))
+    return(tbl_df(read.csv(filename_tidy_data)))
 }
 ```
 
