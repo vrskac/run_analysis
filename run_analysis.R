@@ -8,7 +8,7 @@ run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE,
     # Load libraries.
     library(dplyr, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
     library(tidyr, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
-    
+
     # Source scripts.
     source("prepare_data.R")
     source("tidy_data.R")
@@ -74,17 +74,7 @@ run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE,
     }
     
     if(return_tidy_data) {
-        cols = c(subject = "integer", 
-                 activity = "character",
-                 domain = "character",
-                 signal_type = "character",
-                 signal_source = "character",
-                 signal_form = "character", 
-                 calculation = "character", 
-                 axis = "character", 
-                 value = "double")
-        return(tbl_df(read.csv(filename_tidy_data,
-                               colClasses = cols)))
+        return(tbl_df(read.csv(filename_tidy_data)))
     }
 
 }
