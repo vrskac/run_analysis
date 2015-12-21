@@ -5,8 +5,9 @@ date: "21 December 2015"
 output:
     md_document:
         variant: markdown_github
-        toc: yes
 ---
+
+# README
 
 ## Project information
 * Coursera - Data Science Specialization.

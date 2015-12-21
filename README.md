@@ -1,10 +1,5 @@
--   Project information
--   Preamble
--   Libraries
--   Scripts summary
--   Script annotations
--   CodeBook
--   Usage
+README
+======
 
 Project information
 -------------------
