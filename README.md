@@ -129,3 +129,12 @@ str(run_analysis(TRUE, FALSE, FALSE))
     ##  $ freq_BodyBodyGyroMag_std     : num  -0.824 -0.932 -0.978 -0.321 -0.398 ...
     ##  $ freq_BodyBodyGyroJerkMag_mean: num  -0.942 -0.99 -0.995 -0.319 -0.282 ...
     ##  $ freq_BodyBodyGyroJerkMag_std : num  -0.933 -0.987 -0.995 -0.382 -0.392 ...
+
+Output
+------
+
+-   As per the example above, the data that can be returned from **run\_analysis** is a dplyr tbl\_df, with 180 observations and 68 variables.
+-   The "subject" variable is type "integer".
+-   The "activity" variable is type "factor", with 6 levels.
+-   The remaining 66 variables are all type "numeric".
+-   More information about the returned tidy summary data can be found in **CookBook.md**.
