@@ -32,6 +32,13 @@ output:
 
 ## Detailed functional description of the scripts
 
+### Scripts summary
+Script | Summary
+-------|--------
+run_analysis.R | This is the main entry point script. It makes calls to the prepare and tidy scripts. Can be called with arguments to return the tidy data, re-prepare the data, or re-tidy the data. This script is responsible for creating the local files of the prepared and tidied data.
+prepare_data.R | Takes an argument value of "test" or "train" to indicate which dataset is to be prepared and returned.
+tidy_data.R | Takes an argument value of the prepared data, tidies it, then summarises it for return.
+
 ### run_analysis.R
 * When calling the run_analysis function three parameters can be supplied, all of which are logical and default to FALSE.
     + return\_tidy\_data is a flag to indicate if a dplyr tbl_df of the tidy data should be returned to the function caller.
@@ -397,19 +404,36 @@ summarise_each(funs(mean)) %>%
 return()
 ```
 
-#### Output variable descriptions
-The output data is grouped with the following heirarchy.
+## Usage
+The following call to the **run_analysis** function will re-prepare and re-tidy the data before returning it.
+```{r eval=FALSE, warning=FALSE}
+source("run_analysis.R")
+run_analysis(TRUE, TRUE, TRUE)
+```
 
-* subject > activity > domain > signal\_type > signal\_source > signal\_form > calculation > axis
+## Output
+* dplyr tbl_df, with 180 observations and 68 variables.
+* The output data is grouped by subject then activity.
+* The value provided for the numeric measurements columns 3:68 is the mean value for the measurement, grouped by activity and then subject.
 
+### Example output
+```{r eval=TRUE, warning=FALSE}
+source("run_analysis.R")
+str(run_analysis(TRUE, TRUE, TRUE))
+```
+
+### Variable information
+
+#### Summary table
 Variable | Class | Description
 ---------|-------|------------
-subject | int | The subject identifier from 1 to 30.
-activity | chr | The activity type from a list of 6 options of "laying", "sitting", "standing", "walking", "walking\_downstairs", "walking\_upstairs".
-domain | chr | Domain signal type, either "time" for time or "freq" for frequency.
-signal\_type | chr | The acceleration signal type, either "body" or "gravity".
-signal\_source | chr | The source of the signal, either "accelerometer", "bodyaccelerometer", "bodygyroscope" or "gyroscope". Note that the string "body" was featured twice in some of the messy variable names. For these variables we have used the first "body" for the "signal\_type" variable and the second "body" has been left as part of this "signal\_source" variable value.
-signal\_form | chr | The signal form, either "jerk", "mag", "jerkmag" or NA.
-calculation | chr | The calculation performed, either "mean" for the mean or "std" for the standard deviation.
-axis | chr | The signal axis, if any, either "x", "y", "z" or NA.
-mean\_value | dbl | The mean value of the measurement.
+subject | integer | The subject identifier from 1 to 30.
+activity | factor | The activity type from a list of 6 options of "laying", "sitting", "standing", "walking", "walking\_downstairs", "walking\_upstairs".
+3:68 | numeric | See description of numeric measurement variables below.
+
+#### Description of numeric measurement variables (columns 3 to 68)
+* An "_" character is used to split the variable name for ease of understanding and readability.
+* The first part (always the first 4 characters) indicates if the measurement is for the time ("time") or frequency ("freq") domain.
+* The second part (after the first underscore) is the main label used to identify the measurement being taken.
+* The third part (after the second underscore) is the measurement function, either mean ("mean") or standard deviation ("std").
+* Some variables have a 4th part (after a third underscore) that indicates the axis of the measurement, either "x", "y" or "z".

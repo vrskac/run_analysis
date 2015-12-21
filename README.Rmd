@@ -45,7 +45,7 @@ The CodeBook.md file provides a descriptive outline of what the scripts are doin
 The following call to the **run_analysis** function will re-prepare and re-tidy the data before returning it. The call has been wrapped within a call to str() for presentation purposes.
 ```{r eval=TRUE, warning=FALSE}
 source("run_analysis.R")
-str(run_analysis(TRUE, FALSE, FALSE))
+str(run_analysis(TRUE, TRUE, TRUE))
 ```
 
 ## Output

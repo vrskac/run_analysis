@@ -52,13 +52,13 @@ The following call to the **run\_analysis** function will re-prepare and re-tidy
 
 ``` r
 source("run_analysis.R")
-str(run_analysis(TRUE, FALSE, FALSE))
+str(run_analysis(TRUE, TRUE, TRUE))
 ```
 
-    ## Warning: No processing was performed.
-    ## Info: prepared_data.csv and tidy_data.csv already exist.
-    ## Info: Set parameter re_prepare = TRUE to re-prepare data.
-    ## Info: Set parameter re_tidy = TRUE to re-tidy data.
+    ## Info: File prepared_data.csv will be rebuilt.
+    ## Info: File tidy_data.csv will be rebuilt.
+    ## Info: File prepared_data.csv has been rebuilt.
+    ## Info: File tidy_data.csv has been rebuilt.
 
     ## Classes 'tbl_df', 'tbl' and 'data.frame':    180 obs. of  68 variables:
     ##  $ subject                      : int  1 1 1 1 1 1 2 2 2 2 ...
