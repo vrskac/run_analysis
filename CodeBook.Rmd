@@ -1,21 +1,21 @@
 ---
 title: "CodeBook"
 author: "Aaron Cole"
-date: "20 December 2015"
+date: "21 December 2015"
 output:
-  pdf_document:
-    toc: yes
-  html_document:
-    theme: united
-    toc: yes
-    toc_depth: 4
+    md_document:
+        variant: markdown_github
 ---
+
+# CookBook
 
 ## Dataset information
 * Dataset full name is "Human Activity Recognition Using Smartphones Dataset".
 * The dataset folder is named "UCI HAR Dataset" and is located in the root of the repository.
-* Information about the dataset can be found at [http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones).
-* The dataset can be downloaded at [https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip)
+* Information about the dataset can be found at;
+    + [http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones](http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones).
+* The dataset can be downloaded at;
+    + [https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip](https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip).
 
 ## Assumptions
 * Variable count and ordering is the same between the "X_test.txt" and "X_train.txt" files.
@@ -33,32 +33,32 @@ output:
 ## Detailed functional description of the scripts
 
 ### run_analysis.R
-1. When calling the run_analysis function three parameters can be supplied, all of which are logical and default to FALSE.
+* When calling the run_analysis function three parameters can be supplied, all of which are logical and default to FALSE.
     + return\_tidy\_data is a flag to indicate if a dplyr tbl_df of the tidy data should be returned to the function caller.
     + re\_prepare is a flag to indicate if the raw data needs to be re-prepared and the prepare_data.csv file rebuilt.
     + re\_tidy is a flag to indicate if the prepared data needs to be re-tidied and the tidy_data.csv file rebuilt.
 ```{r eval=FALSE}
 run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, re_tidy = FALSE)
 ```
-2. Load the libraries we'll be using.
+* Load the libraries we'll be using.
 ```{r eval=FALSE}
 # Load libraries.
 library(dplyr, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 library(tidyr, quietly = TRUE, verbose = FALSE, warn.conflicts = FALSE)
 ```
-3. Source the prepare and tidy scripts.
+* Source the prepare and tidy scripts.
 ```{r eval=FALSE}
 # Source scripts.
 source("prepare_data.R")
 source("tidy_data.R")
 ```
-4. Setup filename variables.
+* Setup filename variables.
 ```{r eval=FALSE}
 # Setup the filenames.
 filename_prepared_data <- "prepared_data.csv"
 filename_tidy_data <- "tidy_data.csv" 
 ```
-5. Check if the prepared and tidy data files exist already. If they do not exist, or if they need to be rebuilt then set the flag and output a message. If we are re-preparing the data then we should also re-tidy the newly prepared data.
+* Check if the prepared and tidy data files exist already. If they do not exist, or if they need to be rebuilt then set the flag and output a message. If we are re-preparing the data then we should also re-tidy the newly prepared data.
 ```{r eval=FALSE}
 # Check if the prepared data file exists.
 if(file.exists(filename_prepared_data) == FALSE | re_prepare == TRUE) {
@@ -79,7 +79,7 @@ if(re_prepare == TRUE & re_tidy == FALSE) {
     message("Info: File tidy_data.csv will therefore also be rebuilt.")
 }
 ```
-6. Preparing (and re-preparing) the data.
+* Preparing (and re-preparing) the data.
     + Make two calls to the prepare_data function, passing "test" then "train".
     + Row bind the results.
     + Perform checks on the prepared data.
@@ -106,7 +106,7 @@ if(re_prepare) {
     message("Info: File prepared_data.csv has been rebuilt.")
 }
 ```
-7. Tidying (and re-tidying) the data.
+* Tidying (and re-tidying) the data.
     + Call the tidy_data function, passing the prepared data read from CSV.
     + Write the tidied data out to file "tidy_data.CSV".
     + Print completion message.
@@ -121,7 +121,7 @@ if(re_tidy) {
     message("Info: File tidy_data.csv has been rebuilt.")
 }
 ```
-8. Check if any processing was done and print messages if not.
+* Check if any processing was done and print messages if not.
 ```{r eval=FALSE}
 if(re_prepare == FALSE & re_tidy == FALSE) {
     message("Warning: No processing was performed.")
@@ -130,7 +130,7 @@ if(re_prepare == FALSE & re_tidy == FALSE) {
     message("Info: Set parameter re_tidy = TRUE to re-tidy data.")
 }
 ```
-9. If return\_tidy\_data is TRUE, then read the tidy data from CSV and return it to the function caller.
+* If return\_tidy\_data is TRUE, then read the tidy data from CSV and return it to the function caller.
 ```{r eval=FALSE}
 if(return_tidy_data) {
     cols = c(subject = "integer", 
@@ -148,19 +148,19 @@ if(return_tidy_data) {
 ```
 
 ### prepare_data.R
-1. When calling the prepare_data function a single parameter must be supplied with a value of either "test" or "train", to indicate the dataset to work with.
+* When calling the prepare_data function a single parameter must be supplied with a value of either "test" or "train", to indicate the dataset to work with.
 ```{r eval=FALSE}
 # Input parameter should be either "train" or "test".
 prepare_data <- function(dataset)
 ```
-2. Validate the dataset parameter value.
+* Validate the dataset parameter value.
 ```{r eval=FALSE}
 # Validate the dataset to be worked with.
 if(dataset %in% c("test", "train") == FALSE) {
     stop("Parameter \"dataset\" must be either \"test\" or \"train\".")
 }
 ```
-3. Setup variables.
+* Setup variables.
 ```{r eval=FALSE}
 # Variable setup.
 dataset_folder <- "UCI HAR Dataset"
@@ -168,7 +168,7 @@ subject_values <- NULL
 activity_values <- NULL
 main_data <- NULL
 ```
-4. Read the relevant files based on the value of the "dataset" parameter. Whichever case, the data is loaded into the same variables for further processing.
+* Read the relevant files based on the value of the "dataset" parameter. Whichever case, the data is loaded into the same variables for further processing.
 ```{r eval=FALSE}
     # Read the relevant files.
     if(dataset == "test") {
@@ -195,7 +195,7 @@ main_data <- NULL
                                                  "X_train.txt")))
     }
 ```
-5. Perform checks on the loaded data.
+* Perform checks on the loaded data.
 ```{r eval=FALSE}
 # Check for the correct number of unique subject values.
 if(dataset == "test") {
@@ -217,13 +217,13 @@ if(!identical(nrow(subject_values), nrow(activity_values),
     stop("Datasets have different count of observations.")
 }
 ```
-6. Set column names.
+* Set column names.
 ```{r eval=FALSE}
 # Set column names for the subject and activity values datasets.
 colnames(subject_values) <- "subject"
 colnames(activity_values) <- "activity_id"
 ```
-7. Validate that the activity values are as expected. Then load the activity labels and set column names.
+* Validate that the activity values are as expected. Then load the activity labels and set column names.
 ```{r eval=FALSE}
 # Check that the unique activity values are within the range 1 to 6.
 if(!all(distinct(activity_values)$activity_id %in% c(1,2,3,4,5,6))) {
@@ -237,7 +237,7 @@ activity_labels <- tbl_df(read.table(file.path(dataset_folder,
 # Set column names for the activity labels dataset.
 colnames(activity_labels) <- c("activity_id", "activity")
 ```
-8. Join the activity values and their labels, then select only the labels and convert the column class.
+* Join the activity values and their labels, then select only the labels and convert the column class.
 ```{r eval=FALSE}
 # Join the activity values and labels datasets, then select only labels.
 activity_values <- 
@@ -248,12 +248,12 @@ activity_values <-
 # Convert the activity column to a character vector.
 activity_values$activity <- as.character(activity_values$activity)
 ```
-9. Bind the columns of the subject and activity datasets. The resulting dataset will be joined to the main data later on.
+* Bind the columns of the subject and activity datasets. The resulting dataset will be joined to the main data later on.
 ```{r eval=FALSE}
 # Join the subject and activity datasets.
 subjects_and_activities <- bind_cols(subject_values, activity_values)
 ```
-10. Load the variable labels and set column names.
+* Load the variable labels and set column names.
 ```{r eval=FALSE}
 # Load the variable labels.
 variable_labels <- tbl_df(read.table(file.path(dataset_folder, 
@@ -262,14 +262,14 @@ variable_labels <- tbl_df(read.table(file.path(dataset_folder,
 # Set variables dataset column names.
 colnames(variable_labels) <- c("variable_id", "variable")
 ```
-11. Check that the number of variable labels matches the number of columns in the main data.
+* Check that the number of variable labels matches the number of columns in the main data.
 ```{r eval=FALSE}
 # Check the number of variable labels (columns).
 if(!identical(nrow(variable_labels), ncol(main_data))) {
     stop("Variable count mismatch between labels and data.")       
 }
 ```
-12. Convert the variable labels to a character vector. The raw variable labels contain invalid characters which can cause problems, so we use the make.names() function to convert the variable labels to valid names and store in a new variable, which we use to set the column names of the main data.
+* Convert the variable labels to a character vector. The raw variable labels contain invalid characters which can cause problems, so we use the make.names() function to convert the variable labels to valid names and store in a new variable, which we use to set the column names of the main data.
 ```{r eval=FALSE}
 # Convert variable labels to character vector.
 variable_labels <- as.character(variable_labels$variable)
@@ -280,7 +280,7 @@ valid_variable_labels <- make.names(variable_labels, unique = TRUE,
 # Set column main data column names.
 colnames(main_data) <- valid_variable_labels
 ```
-13. We match the converted variable names for the strings ".mean.." and ".std.." for the purpose of identifying the mean and standard deviation columns we are interested in keeping. We create a logical vector so we know the positions of the variables we want to keep.
+* We match the converted variable names for the strings ".mean.." and ".std.." for the purpose of identifying the mean and standard deviation columns we are interested in keeping. We create a logical vector so we know the positions of the variables we want to keep.
 ```{r eval=FALSE}
 # Get a list of the variables we need to work with, based on matching the
 # list for ".mean.." and ".std..".
@@ -288,7 +288,7 @@ selected_variables <- as.logical(
     grepl(".mean..", valid_variable_labels, fixed = TRUE) + 
         grepl(".std..", valid_variable_labels, fixed = TRUE))
 ```
-14. Create an integer vector of all the main data variable positions. Loop through the variable\_positions vector and check if the same position is TRUE in our selected\_variables logical vector. If TRUE, store the position value in a vector to be used to select only the required variables by position into our main\_data dataset.
+* Create an integer vector of all the main data variable positions. Loop through the variable\_positions vector and check if the same position is TRUE in our selected\_variables logical vector. If TRUE, store the position value in a vector to be used to select only the required variables by position into our main\_data dataset.
 ```{r eval=FALSE}
 # Create a vector of the column positions in the main data.
 variable_positions <- as.integer(1:length(selected_variables))
@@ -304,64 +304,67 @@ for(i in variable_positions) {
 # Select only the required columns.
 main_data <- select(main_data, selected_positions)
 ```
-15. Now the main\_data dataset has only the necessary columns, we can join it with the subjects\_and\_activities dataset.  
+* Now the main\_data dataset has only the necessary columns, we can join it with the subjects\_and\_activities dataset.  
 ```{r eval=FALSE}
 # Join the subject and activity dataset with the main dataset.
 main_data <- bind_cols(subjects_and_activities, main_data)
 ```
-16. The data is now prepared and can be returned to the caller.
+* The data is now prepared and can be returned to the caller.
 ```{r eval=FALSE}
 # Return the dataset.
 return(main_data)
 ```
 
 ### tidy_data.R
-1. When calling the tidy_data function we must supply the prepared data as a parameter.
+* When calling the tidy_data function we must supply the prepared data as a parameter.
 ```{r eval=FALSE}
 # The prepared dataset must be supplied as a parameter.
-tidy_data <- function(dataset)
+tidy_data <- function(dataset) {
 ```
-2. The prepared data is "wide", we need it to be "long". Many of the columns contain multiple variables, we need to tidy the columns. We can use the gather() function from tidyr to gather up our columns. We gather up all columns, excluding subject and activity.
+* Except for the "subject" and "activity" variables, the variable names need to be tidied up. Create character vectors to hold the old and new variable names.
 ```{r eval=FALSE}
-# Use tidyr's gather() function to make the data long rather than wide.
-# Exclude the subject and activity columns from the operation, include 
-# all other columns.
-dataset <- dataset %>%
-    gather(signal, value, everything(), -subject, -activity) %>%
+# Get the dataset column names.
+oldcols <- as.character(colnames(dataset))
+newcols <- new("character")
 ```
-3. Our new signal column now includes multiple variables, we need to use tidyr's separate() function to start separating out the variables into their own columns.
-```{r eval=FALSE}    
-# Separate the signal column, putting the calculation and axis part
-# into a new column named calculation.
-separate(signal, c("signal", "calculation"), extra = "merge") %>%
-# Separate the axis value from the calculation column.
-separate(calculation, c("calculation", "axis")) %>%
-# Separate the domain (value t or f) from the signal column, based on
-# separating at the first character, the value of that character going 
-# into a new column called domain.
-separate(signal, c("domain", "signal"), sep = 1)
+* The first letter of the measurement variable names is either "t" or "f", to indicate a time of frequency measurement. Loop through the variable names and where the first letter is "t" replace it with "time\_", where it is "f" replace it with "freq\_". We will use the "_" character as a convention to split our variable names in a more tidy way that will make the variables easier to read. Doing the replacement for "time" and "freq" also makes the variables easier to understand.
+```{r eval=FALSE}
+# Loops through the column names and replace for time and freq.
+for(i in 1:length(oldcols)) {
+    # Get the first character of the variable name.
+    firstchar <- substr(oldcols[i], 1, 1)
+    # Match for time or freq and then replace.
+    if(firstchar %in% c("t", "f")) {
+        replacement <- NULL
+        if(firstchar == "t") {
+            # time.
+            replacement <- "time_"
+        } else {
+            # freq.
+            replacement <- "freq_"
+        }
+        newcols[i] <- paste(replacement, substr(oldcols[i], 2, nchar(oldcols[i])), sep = "")
+    } else {
+        newcols[i] <- oldcols[i]
+    }
+}
 ```
-4. Use the sub() command to match a string within our "signal" variable and then concatenate a "." at the end, ready for separating out. Use seperate() to create new variables for "signal\_type" and "signal\_source". The remaining value left in the "signal" variable will form the "signal\_form" variable.
-```{r eval=FALSE}  
-# Separate signal for body and gravity.
-dataset$signal <- as.character(dataset$signal)
-dataset$signal <- sub("Body", "body.", dataset$signal, fixed = TRUE)
-dataset$signal <- sub("Gravity", "gravity.", dataset$signal, fixed = TRUE)
-dataset <- dataset %>%
-    separate(signal, c("signal_type", "signal"))
+* Tidy up the measurement variables, following our convention to use "_" to split out information within the variable name. We also follow a convention of using lowercase for our padding information, i.e. the extra parts of the variable name that are not part of the main identifier. Lastly we remove any trailing characters that we don't need, before setting the new columns names for the dataset.
+```{r eval=FALSE}
+# Tidy the variable name strings.
+newcols <- gsub(".mean.", "_mean_", newcols, fixed = TRUE)
+newcols <- gsub(".std.", "_std_", newcols, fixed = TRUE)
+newcols <- gsub("..X", "x", newcols, fixed = TRUE)
+newcols <- gsub("..Y", "y", newcols, fixed = TRUE)
+newcols <- gsub("..Z", "z", newcols, fixed = TRUE)
+newcols <- gsub("_.", "", newcols, fixed = TRUE)
 
-# Separate signal for accelerometer and gyroscope.
-dataset$signal <- sub("Acc", "accelerometer.", dataset$signal, fixed = TRUE)
-dataset$signal <- sub("Gyro", "gyroscope.", dataset$signal, fixed = TRUE)
-dataset <- dataset %>%
-    separate(signal, c("signal_source", "signal_form"))
-```
-5. Our variables are now tidy, we have one variable per column. Our rows are also tidy, as each row is one observation. Now we need to tidy up some of the values within our variables. 
-    + We use a convention of having all our character variable values in lowercase.
-    + We use a convention of setting missing/blank values to NA.
-    + We rename the "domain" variables "t = time" and "f = freq".
-```{r eval=FALSE}  
-# Tidy up activity values.
+# Set the dataset column names.
+colnames(dataset) <- newcols
+```  
+* Use a convention of lowercase for the activity values.
+```{r eval=FALSE}
+# Tidy up the activity values.
 dataset$activity <- as.character(dataset$activity)
 dataset$activity[dataset$activity == "STANDING"] <- "standing"
 dataset$activity[dataset$activity == "SITTING"] <- "sitting"
@@ -371,53 +374,27 @@ dataset$activity[dataset$activity == "WALKING_DOWNSTAIRS"] <-
     "walking_downstairs"
 dataset$activity[dataset$activity == "WALKING_UPSTAIRS"] <- 
     "walking_upstairs"
-
-# Tidy up domain values.
-dataset$domain <- as.character(dataset$domain)
-dataset$domain[dataset$domain == "t"] <- "time"
-dataset$domain[dataset$domain == "f"] <- "freq"
-
-# Tidy up signal_source values.
-dataset$signal_source <- as.character(dataset$signal_source)
-dataset$signal_source[dataset$signal_source == "Bodyaccelerometer"] <- "bodyaccelerometer"
-dataset$signal_source[dataset$signal_source == "Bodygyroscope"] <- "bodygyroscope"
-
-# Tidy up signal_form values.
-dataset$signal_form[dataset$signal_form == ""] <- NA
-dataset$signal_form[dataset$signal_form == "Jerk"] <- "jerk"
-dataset$signal_form[dataset$signal_form == "Mag"] <- "mag"
-dataset$signal_form[dataset$signal_form == "JerkMag"] <- "jerkmag"
-
-# Tidy up axis values.
-dataset$axis <- as.character(dataset$axis)
-dataset$axis[dataset$axis == "X"] <- "x"
-dataset$axis[dataset$axis == "Y"] <- "y"
-dataset$axis[dataset$axis == "Z"] <- "z"
-
-# Set blank axis values to NA.
-dataset$axis[dataset$axis == ""] <- NA
 ```
-6. Use dplyr's arrange() function to order our data by our columns from left to right.
-```{r eval=FALSE}  
-    # Arrange the dataset.
-    dataset <- arrange(dataset, subject, activity, domain, signal_type, 
-                       signal_source, signal_form, calculation, axis, value)
+* Arrange our data by subject and then activity.
+```{r eval=FALSE}
+dataset %>% 
+# Arrange by subject then activity.
+arrange(subject, activity) %>%
 ```
-7. Use dplyr's group_by() function to group our columns from left to right, excluding grouping on value.
-```{r eval=FALSE}  
-    # Setup groupings.
-    dataset <- group_by(dataset, subject, activity, domain, signal_type, 
-                        signal_source, signal_form, calculation, axis)
+* Group our data by subject and then activity, ready for it to be summarised.
+```{r eval=FALSE}
+# Setup groupings.
+group_by(subject, activity) %>%
 ```
-8. Use dplyr's summarise() function to summarise the mean of value for our groups, returning the result in a "mean_value" column.
-```{r eval=FALSE}  
-    # Summarise mean of the value by groupings.
-    summary_dataset <- summarise(dataset, mean_value = mean(value))
+* Use the summarise_each() function to get the mean for each variable, summarising by our groups.
+```{r eval=FALSE}
+# Within the groups get the mean for each variable.
+summarise_each(funs(mean)) %>%
 ```
-9. The data is now tidy, grouped and summarised using mean(value). Return the tidy date to the caller.
-```{r eval=FALSE}  
-    # Return the summary dataset.
-    return(summary_dataset)
+* Finally we return our data to the caller.
+```{r eval=FALSE}
+# Return tidied dataset.
+return()
 ```
 
 #### Output variable descriptions
