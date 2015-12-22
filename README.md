@@ -137,4 +137,4 @@ Output
 -   The "subject" variable is type "integer".
 -   The "activity" variable is type "factor", with 6 levels.
 -   The remaining 66 variables are all type "numeric".
--   More information about the returned tidy summary data can be found in **CookBook.md**.
+-   More information about the returned tidy summary data can be found in **CodeBook.md**.
