@@ -106,11 +106,14 @@ prepare_data <- function(dataset) {
     # Set column main data column names.
     colnames(main_data) <- valid_variable_labels
     
+    # Convert all the variable names to lowercase for matching.
+    valid_variable_labels <- tolower(valid_variable_labels)
+    
     # Get a list of the variables we need to work with, based on matching the
-    # list for ".mean.." and ".std..".
+    # list for "mean" and "std".
     selected_variables <- as.logical(
-        grepl(".mean..", valid_variable_labels, fixed = TRUE) + 
-            grepl(".std..", valid_variable_labels, fixed = TRUE))
+        grepl("mean", valid_variable_labels, fixed = TRUE) + 
+            grepl("std", valid_variable_labels, fixed = TRUE))
     
     # Create a vector of the column positions in the main data.
     variable_positions <- as.integer(1:length(selected_variables))

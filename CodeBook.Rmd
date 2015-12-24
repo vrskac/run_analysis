@@ -22,7 +22,7 @@ output:
 * Each line in the data files is one observation.
 * There should be the same number of observations in each of the 3 data files for the "test" and "train" datasets.
 * The "Inertial Signals" folder within the "test" and "train" folders can be ignored.
-* We will match the converted variable names for the strings ".mean.." and ".std.." for the purpose of identifying the mean and standard deviation columns we are interested in keeping.
+* We will mattch the lowercase converted variable names for the strings "mean" and "std" for the purpose of identifying the mean and standard deviation columns we are interested in keeping.
 
 ## Checks
 * Once the "test" and "train" datasets have been joined, there should be exactly 10,299 observations.
@@ -32,20 +32,24 @@ output:
 
 ## Detailed functional description of the scripts
 
-### Scripts summary
+## Scripts summary
 Script | Summary
 -------|--------
-run_analysis.R | This is the main entry point script. It makes calls to the prepare and tidy scripts. Can be called with arguments to return the tidy data, re-prepare the data, or re-tidy the data. This script is responsible for creating the local files of the prepared and tidied data.
+run_analysis.R | This is the main entry point script. It makes calls to the prepare and tidy scripts. Can be called with arguments to return the tidy data, write the tidy data to a textfile, re-prepare the data, or re-tidy the data. This script is responsible for creating the local files of the prepared and tidied data.
 prepare_data.R | Takes an argument value of "test" or "train" to indicate which dataset is to be prepared and returned.
 tidy_data.R | Takes an argument value of the prepared data, tidies it, then summarises it for return.
 
 ### run_analysis.R
-* When calling the run_analysis function three parameters can be supplied, all of which are logical and default to FALSE.
-    + return\_tidy\_data is a flag to indicate if a dplyr tbl_df of the tidy data should be returned to the function caller.
+* When calling the run_analysis function four parameters can be supplied, all of which are logical and default to FALSE.
+    + return\_tidy\_data\_frame is a flag to indicate if a data frame of the tidy data should be returned to the function caller.
+    + write\_tidy\_txt is a flag to indicate if the tidy data should be output to a tidy_data.txt textfile.
     + re\_prepare is a flag to indicate if the raw data needs to be re-prepared and the prepare_data.csv file rebuilt.
     + re\_tidy is a flag to indicate if the prepared data needs to be re-tidied and the tidy_data.csv file rebuilt.
 ```{r eval=FALSE}
-run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, re_tidy = FALSE)
+run_analysis <- function(return_tidy_data_frame = FALSE, 
+                         write_tidy_txt = FALSE, 
+                         re_prepare = FALSE, 
+                         re_tidy = FALSE)
 ```
 * Load the libraries we'll be using.
 ```{r eval=FALSE}
@@ -137,10 +141,21 @@ if(re_prepare == FALSE & re_tidy == FALSE) {
     message("Info: Set parameter re_tidy = TRUE to re-tidy data.")
 }
 ```
-* If return\_tidy\_data is TRUE, then read the tidy data from CSV and return it to the function caller as a dplyr tbl_df.
+* Read the tidy data from CSV, then output again at TXT if required.
 ```{r eval=FALSE}
-if(return_tidy_data) {
-    return(tbl_df(read.csv(filename_tidy_data)))
+# Read the tidy date from file.
+tidy_data <- read.csv(filename_tidy_data)
+
+# Output to textfile if required.
+if(write_tidy_txt) {
+    write.table(tidy_data, "tidy_data.txt", row.names = FALSE)
+    message("Info: File tidy_data.txt has been created.")
+}
+```
+* If return\_tidy\_data\_frame is TRUE, then return the tidy data as a data frame to the function caller.
+```{r eval=FALSE}
+if(return_tidy_data_frame) {
+    return(tidy_data)
 }
 ```
 
@@ -277,13 +292,16 @@ valid_variable_labels <- make.names(variable_labels, unique = TRUE,
 # Set column main data column names.
 colnames(main_data) <- valid_variable_labels
 ```
-* We match the converted variable names for the strings ".mean.." and ".std.." for the purpose of identifying the mean and standard deviation columns we are interested in keeping. We create a logical vector so we know the positions of the variables we want to keep.
+* We match the lowercase converted variable names for the strings "mean" and "std" for the purpose of identifying the mean and standard deviation columns we are interested in keeping. We create a logical vector so we know the positions of the variables we want to keep.
 ```{r eval=FALSE}
+# Convert all the variable names to lowercase for matching.
+valid_variable_labels <- tolower(valid_variable_labels)
+
 # Get a list of the variables we need to work with, based on matching the
-# list for ".mean.." and ".std..".
+# list for "mean" and "std".
 selected_variables <- as.logical(
-    grepl(".mean..", valid_variable_labels, fixed = TRUE) + 
-        grepl(".std..", valid_variable_labels, fixed = TRUE))
+    grepl("mean", valid_variable_labels, fixed = TRUE) + 
+        grepl("std", valid_variable_labels, fixed = TRUE))
 ```
 * Create an integer vector of all the main data variable positions. Loop through the variable\_positions vector and check if the same position is TRUE in our selected\_variables logical vector. If TRUE, store the position value in a vector to be used to select only the required variables by position into our main\_data dataset.
 ```{r eval=FALSE}
@@ -346,15 +364,28 @@ for(i in 1:length(oldcols)) {
     }
 }
 ```
-* Tidy up the measurement variables, following our convention to use "_" to split out information within the variable name. We also follow a convention of using lowercase for our padding information, i.e. the extra parts of the variable name that are not part of the main identifier. Lastly we remove any trailing characters that we don't need, before setting the new columns names for the dataset.
+* Tidy up the measurement variables and then set the names.
+    + We follow a convention of using an "_" to separate out parts of the variable name.
+    + Transform the parts of the name relating to the mean and standard deviation.
+    + Tidy up the name of the angle variables.
+    + Tidy up the gravity part of the variables.
+    + Tidy up the X, Y, Z part of the variables.
+    + Tidy up trailing characters.
 ```{r eval=FALSE}
 # Tidy the variable name strings.
 newcols <- gsub(".mean.", "_mean_", newcols, fixed = TRUE)
+newcols <- gsub(".meanFreq.", "_meanFreq_", newcols, fixed = TRUE)
 newcols <- gsub(".std.", "_std_", newcols, fixed = TRUE)
+newcols <- gsub(".X.gravityMean.", "_gravityMean_x", newcols, fixed = TRUE)
+newcols <- gsub(".Y.gravityMean.", "_gravityMean_y", newcols, fixed = TRUE)
+newcols <- gsub(".Z.gravityMean.", "_gravityMean_z", newcols, fixed = TRUE)
+newcols <- gsub("angle.", "angle_", newcols, fixed = TRUE)
+newcols <- gsub(".gravity", "_gravity", newcols, fixed = TRUE)    
 newcols <- gsub("..X", "x", newcols, fixed = TRUE)
 newcols <- gsub("..Y", "y", newcols, fixed = TRUE)
 newcols <- gsub("..Z", "z", newcols, fixed = TRUE)
 newcols <- gsub("_.", "", newcols, fixed = TRUE)
+newcols <- gsub(".", "", newcols, fixed = TRUE)
 
 # Set the dataset column names.
 colnames(dataset) <- newcols
@@ -395,36 +426,122 @@ return()
 ```
 
 ## Usage
-The following call to the **run_analysis** function will re-prepare and re-tidy the data before returning it.
+The following call to the **run_analysis** function will re-prepare and re-tidy the data before writing it as a textfile and then returning it.
 ```{r eval=FALSE, warning=FALSE}
 source("run_analysis.R")
-run_analysis(TRUE, TRUE, TRUE)
+run_analysis(TRUE, TRUE, TRUE, TRUE)
 ```
 
 ## Output
-* dplyr tbl_df, with 180 observations and 68 variables.
+* Data frame with 180 observations and 88 variables.
 * The output data is grouped by subject then activity.
-* The value provided for the numeric measurements columns 3:68 is the mean value for the measurement, grouped by activity and then subject.
+* The value provided for the numeric measurements columns 3:88 is the mean value for the measurement, grouped by activity and then subject.
 
 ### Example outputs
 ```{r eval=TRUE, warning=FALSE}
 source("run_analysis.R")
 str(run_analysis(TRUE, FALSE, FALSE))
-run_analysis(TRUE, FALSE, FALSE)
+tbl_df(run_analysis(TRUE, FALSE, FALSE))
 ```
 
 ### Variable information
+#### Notes
+* An "_" character is used to split the variable name for ease of understanding and readability.
+* For columns 3 to 88 (the measurement variables);
+    + Values are normalized and bounded within [-1,1].
+    + The first part of the variable name before the first underscore, indicates if the measurement is for the time ("time") or frequency ("freq") domain, or an angle measurement.
+    + Some variables end with "\_x", "\_y" or "\_z", which indicates the axis of the measurement.
+    + The parts of the variable name after the first underscore and before any axis character, indicate the main identifier of the measurement being taken and the measurement function being performed.
+    + Refer to file README.txt within the "UCI HAR Dataset" folder for more details of the measurements.
 
 #### Summary table
 Variable | Class | Description
 ---------|-------|------------
-subject | integer | The subject identifier from 1 to 30.
-activity | factor | The activity type from a list of 6 options of "laying", "sitting", "standing", "walking", "walking\_downstairs", "walking\_upstairs".
-3:68 | numeric | See description of numeric measurement variables below.
-
-#### Description of numeric measurement variables (columns 3 to 68)
-* An "_" character is used to split the variable name for ease of understanding and readability.
-* The first part (always the first 4 characters) indicates if the measurement is for the time ("time") or frequency ("freq") domain.
-* The second part (after the first underscore) is the main label used to identify the measurement being taken.
-* The third part (after the second underscore) is the measurement function, either mean ("mean") or standard deviation ("std").
-* Some variables have a 4th part (after a third underscore) that indicates the axis of the measurement, either "x", "y" or "z".
+subject                               | int    | The subject identifier from 1 to 30.
+activity                              | factor | The activity type from a list of 6 options of "laying", "sitting", "standing", "walking", "walking\_downstairs", "walking\_upstairs".
+time\_BodyAcc\_mean\_x                | num    | Mean value in the X axis.
+time\_BodyAcc\_mean\_y                | num    | Mean value in the Y axis.
+time\_BodyAcc\_mean\_z                | num    | Mean value in the Z axis.
+time\_BodyAcc\_std\_x                 | num    | Standard deviation value in the X axis.
+time\_BodyAcc\_std\_y                 | num    | Standard deviation value in the Y axis.
+time\_BodyAcc\_std\_z                 | num    | Standard deviation value in the Z axis.
+time\_GravityAcc\_mean\_x             | num    | Mean value in the X axis.
+time\_GravityAcc\_mean\_y             | num    | Mean value in the Y axis.
+time\_GravityAcc\_mean\_z             | num    | Mean value in the Z axis.
+time\_GravityAcc\_std\_x              | num    | Standard deviation value in the X axis.
+time\_GravityAcc\_std\_y              | num    | Standard deviation value in the Y axis.
+time\_GravityAcc\_std\_z              | num    | Standard deviation value in the Z axis.
+time\_BodyAccJerk\_mean\_x            | num    | Mean value in the X axis.
+time\_BodyAccJerk\_mean\_y            | num    | Mean value in the Y axis.
+time\_BodyAccJerk\_mean\_z            | num    | Mean value in the Z axis.
+time\_BodyAccJerk\_std\_x             | num    | Standard deviation value in the X axis.
+time\_BodyAccJerk\_std\_y             | num    | Standard deviation value in the Y axis.
+time\_BodyAccJerk\_std\_z             | num    | Standard deviation value in the Z axis.
+time\_BodyGyro\_mean\_x               | num    | Mean value in the X axis.
+time\_BodyGyro\_mean\_y               | num    | Mean value in the Y axis.
+time\_BodyGyro\_mean\_z               | num    | Mean value in the Z axis.
+time\_BodyGyro\_std\_x                | num    | Standard deviation value in the X axis.
+time\_BodyGyro\_std\_y                | num    | Standard deviation value in the Y axis.
+time\_BodyGyro\_std\_z                | num    | Standard deviation value in the Z axis.
+time\_BodyGyroJerk\_mean\_x           | num    | Mean value in the X axis.
+time\_BodyGyroJerk\_mean\_y           | num    | Mean value in the Y axis.
+time\_BodyGyroJerk\_mean\_z           | num    | Mean value in the Z axis.
+time\_BodyGyroJerk\_std\_x            | num    | Standard deviation value in the X axis.
+time\_BodyGyroJerk\_std\_y            | num    | Standard deviation value in the Y axis.
+time\_BodyGyroJerk\_std\_z            | num    | Standard deviation value in the Z axis.
+time\_BodyAccMag\_mean                | num    | Magnitude mean value.
+time\_BodyAccMag\_std                 | num    | Magnitude standard deviation value.
+time\_GravityAccMag\_mean             | num    | Magnitude mean value.
+time\_GravityAccMag\_std              | num    | Magnitude standard deviation value.
+time\_BodyAccJerkMag\_mean            | num    | Jerk magnitude mean value.
+time\_BodyAccJerkMag\_std             | num    | Jerk magnitude standard deviation value.
+time\_BodyGyroMag\_mean               | num    | Magnitude mean value.
+time\_BodyGyroMag\_std                | num    | Magnitude standard deviation value.
+time\_BodyGyroJerkMag\_mean           | num    | Jerk magnitude mean value.
+time\_BodyGyroJerkMag\_std            | num    | Jerk magnitude standard deviation value.
+freq\_BodyAcc\_mean\_x                | num    | Mean value in the X axis.
+freq\_BodyAcc\_mean\_y                | num    | Mean value in the Y axis.
+freq\_BodyAcc\_mean\_z                | num    | Mean value in the Z axis.
+freq\_BodyAcc\_std\_x                 | num    | Standard deviation value in the X axis.
+freq\_BodyAcc\_std\_y                 | num    | Standard deviation value in the Y axis.
+freq\_BodyAcc\_std\_z                 | num    | Standard deviation value in the Z axis.
+freq\_BodyAcc\_meanFreq\_x            | num    | Weighted average of the frequency components to obtain a mean frequency in the X axis.
+freq\_BodyAcc\_meanFreq\_y            | num    | Weighted average of the frequency components to obtain a mean frequency in the Y axis.
+freq\_BodyAcc\_meanFreq\_z            | num    | Weighted average of the frequency components to obtain a mean frequency in the Z axis.
+freq\_BodyAccJerk\_mean\_x            | num    | Mean value in the X axis.
+freq\_BodyAccJerk\_mean\_y            | num    | Mean value in the Y axis.
+freq\_BodyAccJerk\_mean\_z            | num    | Mean value in the Z axis.
+freq\_BodyAccJerk\_std\_x             | num    | Standard deviation value in the X axis.
+freq\_BodyAccJerk\_std\_y             | num    | Standard deviation value in the Y axis.
+freq\_BodyAccJerk\_std\_z             | num    | Standard deviation value in the Z axis.
+freq\_BodyAccJerk\_meanFreq\_x        | num    | Weighted average of the frequency components to obtain a mean frequency in the X axis.
+freq\_BodyAccJerk\_meanFreq\_y        | num    | Weighted average of the frequency components to obtain a mean frequency in the Y axis.
+freq\_BodyAccJerk\_meanFreq\_z        | num    | Weighted average of the frequency components to obtain a mean frequency in the Z axis.
+freq\_BodyGyro\_mean\_x               | num    | Mean value in the X axis.
+freq\_BodyGyro\_mean\_y               | num    | Mean value in the Y axis.
+freq\_BodyGyro\_mean\_z               | num    | Mean value in the Z axis.
+freq\_BodyGyro\_std\_x                | num    | Standard deviation value in the X axis.
+freq\_BodyGyro\_std\_y                | num    | Standard deviation value in the Y axis.
+freq\_BodyGyro\_std\_z                | num    | Standard deviation value in the Z axis.
+freq\_BodyGyro\_meanFreq\_x           | num    | Weighted average of the frequency components to obtain a mean frequency in the X axis.
+freq\_BodyGyro\_meanFreq\_y           | num    | Weighted average of the frequency components to obtain a mean frequency in the Y axis.
+freq\_BodyGyro\_meanFreq\_z           | num    | Weighted average of the frequency components to obtain a mean frequency in the Z axis.
+freq\_BodyAccMag\_mean                | num    | Magnitude mean value.
+freq\_BodyAccMag\_std                 | num    | Magnitude standard deviation value.
+freq\_BodyAccMag\_meanFreq            | num    | Weighted average of the frequency components to obtain a mean frequency.
+freq\_BodyBodyAccJerkMag\_mean        | num    | Jerk magnitude mean value.
+freq\_BodyBodyAccJerkMag\_std         | num    | Jerk magnitude standard deviation value.
+freq\_BodyBodyAccJerkMag\_meanFreq    | num    | Weighted average of the frequency components to obtain a mean frequency.
+freq\_BodyBodyGyroMag\_mean           | num    | Magnitude mean value.
+freq\_BodyBodyGyroMag\_std            | num    | Magnitude standard deviation value.
+freq\_BodyBodyGyroMag\_meanFreq       | num    | Weighted average of the frequency components to obtain a mean frequency.
+freq\_BodyBodyGyroJerkMag\_mean       | num    | Jerk magnitude mean value.
+freq\_BodyBodyGyroJerkMag\_std        | num    | Jerk magnitude standard deviation value.
+freq\_BodyBodyGyroJerkMag\_meanFreq   | num    | Weighted average of the frequency components to obtain a mean frequency.
+angle\_tBodyAccMean\_gravity          | num    | Additional vector obtained by averaging the signals in a signal window sample.
+angle\_tBodyAccJerkMean\_gravityMean  | num    | Additional vector obtained by averaging the signals in a signal window sample.
+angle\_tBodyGyroMean\_gravityMean     | num    | Additional vector obtained by averaging the signals in a signal window sample.
+angle\_tBodyGyroJerkMean\_gravityMean | num    | Additional vector obtained by averaging the signals in a signal window sample.
+angle\_x\_gravityMean                 | num    | Additional vector obtained by averaging the signals in a signal window sample.
+angle\_y\_gravityMean                 | num    | Additional vector obtained by averaging the signals in a signal window sample.
+angle\_z\_gravityMean                 | num    | Additional vector obtained by averaging the signals in a signal window sample.

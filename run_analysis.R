@@ -1,8 +1,11 @@
-# return_tidy_data flag is used to return a tbl_df of the tidy data.
+# return_tidy_data_frame flag used to return a data frame of the tidy data.
+# write_tidy_txt flag used to write a tidy_data.txt textfile of the tidy data.
 # re_prepare flags rebuild of "prepared_data.csv" file.
 # re_tidy flags rebuild of "tidy_data.csv" file.
 # Both flags false by default, script will attempt to use existing local files.
-run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE, 
+run_analysis <- function(return_tidy_data_frame = FALSE, 
+                         write_tidy_txt = FALSE, 
+                         re_prepare = FALSE, 
                          re_tidy = FALSE) {
     
     # Load libraries.
@@ -73,8 +76,17 @@ run_analysis <- function(return_tidy_data = FALSE, re_prepare = FALSE,
         message("Info: Set parameter re_tidy = TRUE to re-tidy data.")
     }
     
-    if(return_tidy_data) {
-        return(tbl_df(read.csv(filename_tidy_data)))
+    # Read the tidy date from file.
+    tidy_data <- read.csv(filename_tidy_data)
+    
+    # Output to textfile if required.
+    if(write_tidy_txt) {
+        write.table(tidy_data, "tidy_data.txt", row.names = FALSE)
+        message("Info: File tidy_data.txt has been created.")
+    }
+    
+    if(return_tidy_data_frame) {
+        return(tidy_data)
     }
 
 }

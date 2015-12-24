@@ -27,12 +27,19 @@ tidy_data <- function(dataset) {
 
     # Tidy the variable name strings.
     newcols <- gsub(".mean.", "_mean_", newcols, fixed = TRUE)
+    newcols <- gsub(".meanFreq.", "_meanFreq_", newcols, fixed = TRUE)
     newcols <- gsub(".std.", "_std_", newcols, fixed = TRUE)
+    newcols <- gsub(".X.gravityMean.", "_gravityMean_x", newcols, fixed = TRUE)
+    newcols <- gsub(".Y.gravityMean.", "_gravityMean_y", newcols, fixed = TRUE)
+    newcols <- gsub(".Z.gravityMean.", "_gravityMean_z", newcols, fixed = TRUE)
+    newcols <- gsub("angle.", "angle_", newcols, fixed = TRUE)
+    newcols <- gsub(".gravity", "_gravity", newcols, fixed = TRUE)    
     newcols <- gsub("..X", "x", newcols, fixed = TRUE)
     newcols <- gsub("..Y", "y", newcols, fixed = TRUE)
     newcols <- gsub("..Z", "z", newcols, fixed = TRUE)
     newcols <- gsub("_.", "", newcols, fixed = TRUE)
-    
+    newcols <- gsub(".", "", newcols, fixed = TRUE)
+
     # Set the dataset column names.
     colnames(dataset) <- newcols
     
