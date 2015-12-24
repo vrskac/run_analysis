@@ -18,7 +18,7 @@ Assumptions
 -   Each line in the data files is one observation.
 -   There should be the same number of observations in each of the 3 data files for the "test" and "train" datasets.
 -   The "Inertial Signals" folder within the "test" and "train" folders can be ignored.
--   We will mattch the lowercase converted variable names for the strings "mean" and "std" for the purpose of identifying the mean and standard deviation columns we are interested in keeping.
+-   We will match the lowercase converted variable names for the strings "mean" and "std" for the purpose of identifying the mean and standard deviation columns we are interested in keeping.
 
 Checks
 ------
@@ -159,7 +159,7 @@ if(re_prepare == FALSE & re_tidy == FALSE) {
 }
 ```
 
--   Read the tidy data from CSV, then output again at TXT if required.
+-   Read the tidy data from CSV, then output again as TXT if required.
 
 ``` r
 # Read the tidy date from file.
@@ -517,13 +517,14 @@ Output
 
 ``` r
 source("run_analysis.R")
-str(run_analysis(TRUE, FALSE, FALSE))
+str(run_analysis(TRUE, TRUE, FALSE, FALSE))
 ```
 
     ## Warning: No processing was performed.
     ## Info: prepared_data.csv and tidy_data.csv already exist.
     ## Info: Set parameter re_prepare = TRUE to re-prepare data.
     ## Info: Set parameter re_tidy = TRUE to re-tidy data.
+    ## Info: File tidy_data.txt has been created.
 
     ## 'data.frame':    180 obs. of  88 variables:
     ##  $ subject                            : int  1 1 1 1 1 1 2 2 2 2 ...
@@ -616,13 +617,14 @@ str(run_analysis(TRUE, FALSE, FALSE))
     ##  $ angle_gravityMean_z                : num  -0.3524 -0.218 0.0123 0.0689 0.065 ...
 
 ``` r
-tbl_df(run_analysis(TRUE, FALSE, FALSE))
+tbl_df(run_analysis(TRUE, TRUE, FALSE, FALSE))
 ```
 
     ## Warning: No processing was performed.
     ## Info: prepared_data.csv and tidy_data.csv already exist.
     ## Info: Set parameter re_prepare = TRUE to re-prepare data.
     ## Info: Set parameter re_tidy = TRUE to re-tidy data.
+    ## Info: File tidy_data.txt has been created.
 
     ## Source: local data frame [180 x 88]
     ## 

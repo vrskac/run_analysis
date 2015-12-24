@@ -22,7 +22,7 @@ output:
 * Each line in the data files is one observation.
 * There should be the same number of observations in each of the 3 data files for the "test" and "train" datasets.
 * The "Inertial Signals" folder within the "test" and "train" folders can be ignored.
-* We will mattch the lowercase converted variable names for the strings "mean" and "std" for the purpose of identifying the mean and standard deviation columns we are interested in keeping.
+* We will match the lowercase converted variable names for the strings "mean" and "std" for the purpose of identifying the mean and standard deviation columns we are interested in keeping.
 
 ## Checks
 * Once the "test" and "train" datasets have been joined, there should be exactly 10,299 observations.
@@ -141,7 +141,7 @@ if(re_prepare == FALSE & re_tidy == FALSE) {
     message("Info: Set parameter re_tidy = TRUE to re-tidy data.")
 }
 ```
-* Read the tidy data from CSV, then output again at TXT if required.
+* Read the tidy data from CSV, then output again as TXT if required.
 ```{r eval=FALSE}
 # Read the tidy date from file.
 tidy_data <- read.csv(filename_tidy_data)
@@ -440,8 +440,8 @@ run_analysis(TRUE, TRUE, TRUE, TRUE)
 ### Example outputs
 ```{r eval=TRUE, warning=FALSE}
 source("run_analysis.R")
-str(run_analysis(TRUE, FALSE, FALSE))
-tbl_df(run_analysis(TRUE, FALSE, FALSE))
+str(run_analysis(TRUE, TRUE, FALSE, FALSE))
+tbl_df(run_analysis(TRUE, TRUE, FALSE, FALSE))
 ```
 
 ### Variable information
